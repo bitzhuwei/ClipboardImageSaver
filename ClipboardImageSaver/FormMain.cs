@@ -176,7 +176,10 @@ namespace ClipboardImageSaver
                 this.btnBrowsePath.Enabled = false;
                 this.txtPath.ReadOnly = true;
                 this.txtPrefix.ReadOnly = true;
+
                 this.id = Directory.GetFiles(this.txtPath.Text).Length;
+                this.StoringPath = this.txtPath.Text;
+                this.Prefix = this.txtPrefix.Text;
             }
         }
 
@@ -185,31 +188,11 @@ namespace ClipboardImageSaver
         Font drawFont = new Font("Arial", 10, FontStyle.Bold, GraphicsUnit.Millimeter);
 
         private string m_prefix = "bitzhuwei.cnblogs.com";
-        public string Prefix
-        {
-            get { return m_prefix; }
-            set
-            {
-                if (value != m_prefix)
-                {
-                    m_prefix = value;
-                }
-            }
-        }
 
-        private string m_storingPath;
+        public string Prefix { get; set; }
+
         private bool cancel;
-        public string StoringPath
-        {
-            get { return m_storingPath; }
-            set
-            {
-                if (value != m_storingPath)
-                {
-                    m_storingPath = value;
-                }
-            }
-        }
+        public string StoringPath { get; set; }
 
         void SaveClipboardImage()
         {
