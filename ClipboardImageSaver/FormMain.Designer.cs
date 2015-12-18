@@ -141,6 +141,7 @@
             this.btnDistinct.TabIndex = 7;
             this.btnDistinct.Text = "Distinct";
             this.btnDistinct.UseVisualStyleBackColor = true;
+            this.btnDistinct.Click += new System.EventHandler(this.btnDistinct_Click);
             // 
             // backgroundWorker1
             // 
