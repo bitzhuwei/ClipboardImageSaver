@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -167,6 +168,7 @@ namespace ClipboardImageSaver
                 this.btnBrowsePath.Enabled = true;
                 this.txtPath.ReadOnly = false;
                 this.txtPrefix.ReadOnly = false;
+                this.btnOpenFolder.Visible = false;
             }
             else
             {
@@ -176,6 +178,7 @@ namespace ClipboardImageSaver
                 this.btnBrowsePath.Enabled = false;
                 this.txtPath.ReadOnly = true;
                 this.txtPrefix.ReadOnly = true;
+                this.btnOpenFolder.Visible = true;
 
                 this.id = Directory.GetFiles(this.txtPath.Text).Length;
                 this.StoringPath = this.txtPath.Text;
@@ -539,6 +542,17 @@ namespace ClipboardImageSaver
         private void pgbDistinct_Click(object sender, EventArgs e)
         {
             this.cancel = true;
+        }
+
+        private void lblPath_DoubleClick(object sender, EventArgs e)
+        {
+            Process.Start("explorer", this.txtPath.Text);
+        }
+
+        private void btnOpenFolder_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer", this.txtPath.Text);
+
         }
 
 

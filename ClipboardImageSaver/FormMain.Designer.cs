@@ -30,7 +30,7 @@
         {
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnBrowsePath = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblPath = new System.Windows.Forms.Label();
             this.txtPrefix = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -40,6 +40,7 @@
             this.btnDistinct = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.pgbDistinct = new System.Windows.Forms.ProgressBar();
+            this.btnOpenFolder = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,14 +64,15 @@
             this.btnBrowsePath.UseVisualStyleBackColor = true;
             this.btnBrowsePath.Click += new System.EventHandler(this.btnBrowsePath_Click);
             // 
-            // label1
+            // lblPath
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Path:";
+            this.lblPath.AutoSize = true;
+            this.lblPath.Location = new System.Drawing.Point(8, 23);
+            this.lblPath.Name = "lblPath";
+            this.lblPath.Size = new System.Drawing.Size(47, 15);
+            this.lblPath.TabIndex = 0;
+            this.lblPath.Text = "Path:";
+            this.lblPath.DoubleClick += new System.EventHandler(this.lblPath_DoubleClick);
             // 
             // txtPrefix
             // 
@@ -95,9 +97,10 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.btnOpenFolder);
             this.groupBox1.Controls.Add(this.txtPath);
             this.groupBox1.Controls.Add(this.btnBrowsePath);
-            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.lblPath);
             this.groupBox1.Controls.Add(this.txtPrefix);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
@@ -160,6 +163,18 @@
             this.pgbDistinct.TabIndex = 9;
             this.pgbDistinct.Visible = false;
             // 
+            // btnOpenFolder
+            // 
+            this.btnOpenFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOpenFolder.Location = new System.Drawing.Point(544, 22);
+            this.btnOpenFolder.Name = "btnOpenFolder";
+            this.btnOpenFolder.Size = new System.Drawing.Size(89, 23);
+            this.btnOpenFolder.TabIndex = 3;
+            this.btnOpenFolder.Text = "Open Path";
+            this.btnOpenFolder.UseVisualStyleBackColor = true;
+            this.btnOpenFolder.Visible = false;
+            this.btnOpenFolder.Click += new System.EventHandler(this.btnOpenFolder_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -184,7 +199,7 @@
 
         private System.Windows.Forms.TextBox txtPath;
         private System.Windows.Forms.Button btnBrowsePath;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblPath;
         private System.Windows.Forms.TextBox txtPrefix;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -194,5 +209,6 @@
         private System.Windows.Forms.Button btnDistinct;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ProgressBar pgbDistinct;
+        private System.Windows.Forms.Button btnOpenFolder;
     }
 }
