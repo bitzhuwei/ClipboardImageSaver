@@ -555,6 +555,11 @@ namespace ClipboardImageSaver
 
         }
 
+        private void notifyIcon1_Click(object sender, EventArgs e)
+        {
+            this.Visible = !this.Visible;
+        }
+
 
     }
 }
