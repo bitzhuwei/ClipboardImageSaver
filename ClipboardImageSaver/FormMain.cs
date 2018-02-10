@@ -213,8 +213,8 @@ namespace ClipboardImageSaver
                     //var yPos = 3;
                     //g.DrawString("http://bitzhuwei.cnblogs.com", drawFont, drawBrush, xPos, yPos);
                     bmap.Save(
-                        Path.Combine(this.StoringPath, string.Format("{0}{1:000000000}.jpg", this.Prefix, this.id)),
-                        System.Drawing.Imaging.ImageFormat.Jpeg);
+                        Path.Combine(this.StoringPath, string.Format("{0}{1:000000000}.png", this.Prefix, this.id)),
+                        System.Drawing.Imaging.ImageFormat.Png);
                     this.id++;
                     bmap.Dispose();
                     //g.Dispose();
