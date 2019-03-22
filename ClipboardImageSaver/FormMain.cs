@@ -12,22 +12,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClipboardImageSaver
-{
-    public partial class FormMain : Form
-    {
-        public FormMain()
-        {
+namespace ClipboardImageSaver {
+    public partial class FormMain : Form {
+        public FormMain() {
             InitializeComponent();
 
             nextClipboardViewer = (IntPtr)SetClipboardViewer((int)this.Handle);
         }
 
-        private void fullname_TextChanged(object sender, EventArgs e)
-        {
+        private void fullname_TextChanged(object sender, EventArgs e) {
             if (Directory.Exists(txtPath.Text)
-                && IsValidFileName(txtPrefix.Text))
-            {
+                && IsValidFileName(txtPrefix.Text)) {
                 this.id = 0;
                 this.StoringPath = txtPath.Text;
                 this.Prefix = txtPrefix.Text;
@@ -37,8 +32,7 @@ namespace ClipboardImageSaver
                 this.txtPath.ReadOnly = false;
                 this.txtPrefix.ReadOnly = false;
             }
-            else
-            {
+            else {
                 this.btnStart.Enabled = false;
                 this.btnDistinct.Enabled = false;
                 this.btnBrowsePath.Enabled = true;
@@ -52,20 +46,15 @@ namespace ClipboardImageSaver
         /// </summary>
         /// <param name="fileName">文件名,不包含路径</param>
         /// <returns></returns>
-        private static bool IsValidFileName(string fileName)
-        {
+        private static bool IsValidFileName(string fileName) {
             bool isValid = true;
             string errChar = "\\/:*?\"<>|";  //
-            if (string.IsNullOrEmpty(fileName))
-            {
+            if (string.IsNullOrEmpty(fileName)) {
                 isValid = false;
             }
-            else
-            {
-                for (int i = 0; i < errChar.Length; i++)
-                {
-                    if (fileName.Contains(errChar[i].ToString()))
-                    {
+            else {
+                for (int i = 0; i < errChar.Length; i++) {
+                    if (fileName.Contains(errChar[i].ToString())) {
                         isValid = false;
                         break;
                     }
@@ -74,10 +63,8 @@ namespace ClipboardImageSaver
             return isValid;
         }
 
-        private void btnBrowsePath_Click(object sender, EventArgs e)
-        {
-            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
+        private void btnBrowsePath_Click(object sender, EventArgs e) {
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                 this.txtPath.Text = folderBrowserDialog1.SelectedPath;
             }
         }
@@ -123,14 +110,11 @@ namespace ClipboardImageSaver
         //    }
         //}
 
-        protected override void WndProc(ref Message m)
-        {
-            if (isStarted && nextClipboardViewer != null)
-            {
+        protected override void WndProc(ref Message m) {
+            if (isStarted && nextClipboardViewer != null) {
                 const int WM_DRAWCLIPBOARD = 0x308;
                 const int WM_CHANGECBCHAIN = 0x030D;
-                switch (m.Msg)
-                {
+                switch (m.Msg) {
                     case WM_CHANGECBCHAIN:
                         //DisplayClipboardData();
                         if (m.WParam == nextClipboardViewer) { nextClipboardViewer = m.LParam; }
@@ -149,8 +133,7 @@ namespace ClipboardImageSaver
                         break;
                 }
             }
-            else
-            {
+            else {
                 base.WndProc(ref m);
             }
         }
@@ -158,10 +141,8 @@ namespace ClipboardImageSaver
         private bool isStarted;
         private int id;
 
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            if (isStarted)
-            {
+        private void btnStart_Click(object sender, EventArgs e) {
+            if (isStarted) {
                 this.btnStart.Text = "Start";
                 this.isStarted = false;
                 this.btnDistinct.Enabled = true;
@@ -170,8 +151,7 @@ namespace ClipboardImageSaver
                 this.txtPrefix.ReadOnly = false;
                 this.btnOpenFolder.Visible = false;
             }
-            else
-            {
+            else {
                 this.btnStart.Text = "Stop";
                 this.isStarted = true;
                 this.btnDistinct.Enabled = false;
@@ -197,17 +177,14 @@ namespace ClipboardImageSaver
         private bool cancel;
         public string StoringPath { get; set; }
 
-        void SaveClipboardImage()
-        {
-            try
-            {
+        void SaveClipboardImage() {
+            try {
                 var data = System.Windows.Forms.Clipboard.GetDataObject();
                 this.txtInfo.Text = string.Format("{1}{0}{2}", Environment.NewLine,
                     DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),
                     string.Join(Environment.NewLine, data.GetFormats()));
                 var bmap = (Image)(data.GetData(typeof(System.Drawing.Bitmap)));
-                if (bmap != null)
-                {
+                if (bmap != null) {
                     //var g = Graphics.FromImage(bmap);
                     //var xPos = bmap.Height - (bmap.Height - 25);
                     //var yPos = 3;
@@ -220,8 +197,7 @@ namespace ClipboardImageSaver
                     //g.Dispose();
                 }
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 MessageBox.Show(e.ToString());
             }
         }
@@ -236,23 +212,19 @@ namespace ClipboardImageSaver
         //    }
         //}
 
-        private void FormMain_Load(object sender, EventArgs e)
-        {
-            try
-            {
+        private void FormMain_Load(object sender, EventArgs e) {
+            try {
                 this.txtPath.Text = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
                 this.txtPrefix.Text = "bitzhuwei.cnblogs.com";
             }
-            catch (Exception)
-            {
+            catch (Exception) {
             }
 
             this.fullname_TextChanged(sender, e);
 
         }
 
-        private void btnDistinct_Click(object sender, EventArgs e)
-        {
+        private void btnDistinct_Click(object sender, EventArgs e) {
             //ready = this.btnStart.Enabled;
 
             this.txtPath.ReadOnly = true;
@@ -304,32 +276,24 @@ namespace ClipboardImageSaver
         //    return result;
         //}
 
-        private static bool IsSameContent(FileInfo[] files, int i, int j)
-        {
+        private static bool IsSameContent(FileInfo[] files, int i, int j) {
             var result = true;
-            using (FileStream fsi = new FileStream(files[i].FullName, FileMode.Open))
-            {
-                using (FileStream fsj = new FileStream(files[j].FullName, FileMode.Open))
-                {
+            using (FileStream fsi = new FileStream(files[i].FullName, FileMode.Open)) {
+                using (FileStream fsj = new FileStream(files[j].FullName, FileMode.Open)) {
                     var counti = 0;
                     var countj = 0;
-                    do
-                    {
+                    do {
                         const int length = 100;
                         var bytesi = new byte[length];
                         var bytesj = new byte[length];
                         counti = fsi.Read(bytesi, 0, length);
                         countj = fsj.Read(bytesj, 0, length);
-                        if (counti != countj)
-                        {
+                        if (counti != countj) {
                             result = false;
                         }
-                        else
-                        {
-                            for (int k = 0; k < counti; k++)
-                            {
-                                if (bytesi[k] != bytesj[k])
-                                {
+                        else {
+                            for (int k = 0; k < counti; k++) {
+                                if (bytesi[k] != bytesj[k]) {
                                     result = false;
                                     break;
                                 }
@@ -416,30 +380,23 @@ namespace ClipboardImageSaver
         //}
 
 
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e) {
             var directory = new DirectoryInfo(e.Argument as string);
             FileInfo[] files;
             var deletedCount = 0;
             e.Result = deletedCount;
-            files = directory.GetFiles("*.jpg");
+            files = directory.GetFiles();
             var toBeDeleted = new List<int>();
-            for (int i = 0; i < files.Length && (!e.Cancel); i++)
-            {
-                if (!toBeDeleted.Contains(i))
-                {
-                    using (FileStream fsi = new FileStream(files[i].FullName, FileMode.Open))
-                    {
+            for (int i = 0; i < files.Length && (!e.Cancel); i++) {
+                if (!toBeDeleted.Contains(i)) {
+                    using (FileStream fsi = new FileStream(files[i].FullName, FileMode.Open)) {
                         var pos = fsi.Position;
-                        for (int j = i + 1; j < files.Length; j++)
-                        {
+                        for (int j = i + 1; j < files.Length; j++) {
                             bool removeJ = IsSameContent(fsi, files[j]);
-                            if (removeJ)
-                            {
+                            if (removeJ) {
                                 toBeDeleted.Add(j);
                             }
-                            if (this.cancel)
-                            {
+                            if (this.cancel) {
                                 e.Cancel = true;
                                 break;
                             }
@@ -458,17 +415,13 @@ namespace ClipboardImageSaver
                     "You can click on the progress bar(the green one) to cancel this distinction operation.")
                     );
             }
-            if (!e.Cancel)
-            {
+            if (!e.Cancel) {
                 deletedCount = toBeDeleted.Count;
-                foreach (var item in toBeDeleted)
-                {
-                    try
-                    {
+                foreach (var item in toBeDeleted) {
+                    try {
                         File.Delete(files[item].FullName);
                     }
-                    catch (Exception ex)
-                    {
+                    catch (Exception ex) {
                         MessageBox.Show("无法删除文件" + files[item].FullName + Environment.NewLine
                             + ex.Message, "提示");
                         deletedCount--;
@@ -476,36 +429,28 @@ namespace ClipboardImageSaver
                 }
                 e.Result = deletedCount;
             }
-            else
-            {
+            else {
                 e.Result = 0;
             }
         }
 
-        private bool IsSameContent(FileStream fsi, FileInfo fileInfo)
-        {
+        private bool IsSameContent(FileStream fsi, FileInfo fileInfo) {
             var result = true;
-            using (FileStream fsj = new FileStream(fileInfo.FullName, FileMode.Open))
-            {
+            using (FileStream fsj = new FileStream(fileInfo.FullName, FileMode.Open)) {
                 var counti = 0;
                 var countj = 0;
-                do
-                {
+                do {
                     const int length = 100;
                     var bytesi = new byte[length];
                     var bytesj = new byte[length];
                     counti = fsi.Read(bytesi, 0, length);
                     countj = fsj.Read(bytesj, 0, length);
-                    if (counti != countj)
-                    {
+                    if (counti != countj) {
                         result = false;
                     }
-                    else
-                    {
-                        for (int k = 0; k < counti; k++)
-                        {
-                            if (bytesi[k] != bytesj[k])
-                            {
+                    else {
+                        for (int k = 0; k < counti; k++) {
+                            if (bytesi[k] != bytesj[k]) {
                                 result = false;
                                 break;
                             }
@@ -516,20 +461,16 @@ namespace ClipboardImageSaver
             return result;
         }
 
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e) {
             this.pgbDistinct.Value = this.pgbDistinct.Minimum + e.ProgressPercentage;
             this.txtInfo.Text = e.UserState.ToString();
         }
 
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
+            if (e.Error != null) {
                 MessageBox.Show(e.Error.ToString(), "Error occured");
             }
-            if (e.Cancelled)
-            {
+            if (e.Cancelled) {
                 MessageBox.Show("The distinction operation is cancelled.", "Cancelled");
             }
             MessageBox.Show("为您删掉了" + e.Result + "个内容重复的文件", "提示");
@@ -539,24 +480,20 @@ namespace ClipboardImageSaver
             this.cancel = false;
         }
 
-        private void pgbDistinct_Click(object sender, EventArgs e)
-        {
+        private void pgbDistinct_Click(object sender, EventArgs e) {
             this.cancel = true;
         }
 
-        private void lblPath_DoubleClick(object sender, EventArgs e)
-        {
+        private void lblPath_DoubleClick(object sender, EventArgs e) {
             Process.Start("explorer", this.txtPath.Text);
         }
 
-        private void btnOpenFolder_Click(object sender, EventArgs e)
-        {
+        private void btnOpenFolder_Click(object sender, EventArgs e) {
             Process.Start("explorer", this.txtPath.Text);
 
         }
 
-        private void notifyIcon1_Click(object sender, EventArgs e)
-        {
+        private void notifyIcon1_Click(object sender, EventArgs e) {
             this.Visible = !this.Visible;
         }
 
