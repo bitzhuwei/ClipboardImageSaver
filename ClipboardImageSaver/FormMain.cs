@@ -23,7 +23,6 @@ namespace ClipboardImageSaver {
         private void fullname_TextChanged(object sender, EventArgs e) {
             if (Directory.Exists(txtPath.Text)
                 && IsValidFileName(txtPrefix.Text)) {
-                this.id = 0;
                 this.StoringPath = txtPath.Text;
                 this.Prefix = txtPrefix.Text;
                 this.btnStart.Enabled = true;
@@ -139,7 +138,6 @@ namespace ClipboardImageSaver {
         }
 
         private bool isStarted;
-        private int id;
 
         private void btnStart_Click(object sender, EventArgs e) {
             if (isStarted) {
@@ -160,7 +158,6 @@ namespace ClipboardImageSaver {
                 this.txtPrefix.ReadOnly = true;
                 this.btnOpenFolder.Visible = true;
 
-                this.id = Directory.GetFiles(this.txtPath.Text).Length;
                 this.StoringPath = this.txtPath.Text;
                 this.Prefix = this.txtPrefix.Text;
             }
@@ -180,8 +177,9 @@ namespace ClipboardImageSaver {
         void SaveClipboardImage() {
             try {
                 var data = System.Windows.Forms.Clipboard.GetDataObject();
+                var now = DateTime.Now;
                 this.txtInfo.Text = string.Format("{1}{0}{2}", Environment.NewLine,
-                    DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+                    now.ToString("yyyy-MM-dd HH:mm:ss.fff"),
                     string.Join(Environment.NewLine, data.GetFormats()));
                 var bmap = (Image)(data.GetData(typeof(System.Drawing.Bitmap)));
                 if (bmap != null) {
@@ -190,14 +188,13 @@ namespace ClipboardImageSaver {
                     //var yPos = 3;
                     //g.DrawString("http://bitzhuwei.cnblogs.com", drawFont, drawBrush, xPos, yPos);
                     bmap.Save(
-                        Path.Combine(this.StoringPath, string.Format("{0}{1:000000000}.png", this.Prefix, this.id)),
+                        Path.Combine(this.StoringPath, string.Format("{0}{1:000000000}.png",
+                        this.Prefix, now.ToString("yyyy-MM-dd_HH-mm-ss.fff"))),
                         System.Drawing.Imaging.ImageFormat.Png);
-                    this.id++;
                     bmap.Dispose();
                     //g.Dispose();
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 MessageBox.Show(e.ToString());
             }
         }
@@ -216,8 +213,7 @@ namespace ClipboardImageSaver {
             try {
                 this.txtPath.Text = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
                 this.txtPrefix.Text = "bitzhuwei.cnblogs.com";
-            }
-            catch (Exception) {
+            } catch (Exception) {
             }
 
             this.fullname_TextChanged(sender, e);
@@ -239,147 +235,6 @@ namespace ClipboardImageSaver {
 
         }
 
-        //private static bool IsSameContent(FileInfo[] files, int i, int j)
-        //{
-        //    var result = true;
-        //    using (FileStream fsi = new FileStream(files[i].FullName, FileMode.Open))
-        //    {
-        //        using (FileStream fsj = new FileStream(files[j].FullName, FileMode.Open))
-        //        {
-        //            var counti = 0;
-        //            var countj = 0;
-        //            do
-        //            {
-        //                const int length = 100;
-        //                var bytesi = new byte[length];
-        //                var bytesj = new byte[length];
-        //                counti = fsi.Read(bytesi, 0, length);
-        //                countj = fsj.Read(bytesj, 0, length);
-        //                if (counti != countj)
-        //                {
-        //                    result = false;
-        //                }
-        //                else
-        //                {
-        //                    for (int k = 0; k < counti; k++)
-        //                    {
-        //                        if (bytesi[k] != bytesj[k])
-        //                        {
-        //                            result = false;
-        //                            break;
-        //                        }
-        //                    }
-        //                }
-        //            } while (result && counti > 0 && countj > 0);
-        //        }
-        //    }
-        //    return result;
-        //}
-
-        private static bool IsSameContent(FileInfo[] files, int i, int j) {
-            var result = true;
-            using (FileStream fsi = new FileStream(files[i].FullName, FileMode.Open)) {
-                using (FileStream fsj = new FileStream(files[j].FullName, FileMode.Open)) {
-                    var counti = 0;
-                    var countj = 0;
-                    do {
-                        const int length = 100;
-                        var bytesi = new byte[length];
-                        var bytesj = new byte[length];
-                        counti = fsi.Read(bytesi, 0, length);
-                        countj = fsj.Read(bytesj, 0, length);
-                        if (counti != countj) {
-                            result = false;
-                        }
-                        else {
-                            for (int k = 0; k < counti; k++) {
-                                if (bytesi[k] != bytesj[k]) {
-                                    result = false;
-                                    break;
-                                }
-                            }
-                        }
-                    } while (result && counti > 0 && countj > 0);
-                }
-            }
-            return result;
-        }
-
-        //private void DeleteRedundancyFiles(string directory)
-        //{
-        //    var files = (new DirectoryInfo(directory)).GetFiles("*.jpg");
-        //    for (int i = 0; i < files.Length; i++)
-        //    {
-        //        for (int j = i + 1; j < files.Length; j++)
-        //        {
-        //            if (File.Exists(files[i].FullName) && File.Exists(files[j].FullName))
-        //            {
-        //                bool removeJ = IsSameContent(files, i, j);
-        //                if (removeJ)
-        //                {
-        //                    try
-        //                    {
-        //                        File.Delete(files[j].FullName);
-        //                    }
-        //                    catch (Exception)
-        //                    { }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
-        //private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        //{
-        //    var directory = new DirectoryInfo(e.Argument as string);
-        //    var deletedCount = 0;
-        //    e.Result = deletedCount;
-        //    FileInfo[] files = directory.GetFiles("*.jpg");
-        //    e.Result = deletedCount;
-        //    for (int i = 0; i < files.Length; i++)
-        //    {
-        //        for (int j = i + 1; j < files.Length; j++)
-        //        {
-        //            if (File.Exists(files[i].FullName) && File.Exists(files[j].FullName))
-        //            {
-        //                bool removeJ = IsSameContent(files, i, j);
-        //                if (removeJ)
-        //                {
-        //                    try
-        //                    {
-        //                        File.Delete(files[j].FullName);
-        //                        deletedCount++;
-        //                        e.Result = deletedCount;
-        //                    }
-        //                    catch (Exception ex)
-        //                    {
-        //                        MessageBox.Show("无法删除文件" + files[j].FullName + Environment.NewLine
-        //                            + ex.Message, "提示");
-        //                    }
-        //                }
-        //            }
-        //            backgroundWorker1.ReportProgress(
-        //                (int)(
-        //                (pgbDistinct.Maximum - pgbDistinct.Minimum)
-        //                * (0.0 + i * files.Length + j)
-        //                / (files.Length * files.Length)),
-        //                string.Format("Progress: {0} of {1}{2}{3}",
-        //                i * files.Length + j, files.Length * files.Length,
-        //                Environment.NewLine,
-        //                "You can click on the progress bar(the green one) to cancel this distinction operation.")
-        //                );
-        //            if (this.cancel)
-        //            {
-        //                e.Cancel = true;
-        //                break;
-        //            }
-        //        }
-        //        if (e.Cancel)
-        //            break;
-        //    }
-        //}
-
-
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e) {
             var directory = new DirectoryInfo(e.Argument as string);
             FileInfo[] files;
@@ -389,20 +244,18 @@ namespace ClipboardImageSaver {
             var toBeDeleted = new List<int>();
             for (int i = 0; i < files.Length && (!e.Cancel); i++) {
                 if (!toBeDeleted.Contains(i)) {
-                    using (FileStream fsi = new FileStream(files[i].FullName, FileMode.Open)) {
-                        var pos = fsi.Position;
-                        for (int j = i + 1; j < files.Length; j++) {
-                            bool removeJ = IsSameContent(fsi, files[j]);
-                            if (removeJ) {
-                                toBeDeleted.Add(j);
-                            }
-                            if (this.cancel) {
-                                e.Cancel = true;
-                                break;
-                            }
+                    for (int j = i + 1; j < files.Length; j++) {
+                        bool removeJ = IsSameContent(files[i], files[j]);
+                        if (removeJ) {
+                            toBeDeleted.Add(j);
+                        }
+                        if (this.cancel) {
+                            e.Cancel = true;
+                            break;
                         }
                     }
                 }
+
                 backgroundWorker1.ReportProgress(
                     (int)(
                     (pgbDistinct.Maximum - pgbDistinct.Minimum)
@@ -420,8 +273,7 @@ namespace ClipboardImageSaver {
                 foreach (var item in toBeDeleted) {
                     try {
                         File.Delete(files[item].FullName);
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                         MessageBox.Show("无法删除文件" + files[item].FullName + Environment.NewLine
                             + ex.Message, "提示");
                         deletedCount--;
@@ -434,31 +286,33 @@ namespace ClipboardImageSaver {
             }
         }
 
-        private bool IsSameContent(FileStream fsi, FileInfo fileInfo) {
-            var result = true;
-            using (FileStream fsj = new FileStream(fileInfo.FullName, FileMode.Open)) {
-                var counti = 0;
-                var countj = 0;
-                do {
-                    const int length = 100;
+        private bool IsSameContent(FileInfo filesi, FileInfo filesj) {
+            var same = true;
+            using (FileStream fsi = new FileStream(filesi.FullName, FileMode.Open)) {
+                using (FileStream fsj = new FileStream(filesj.FullName, FileMode.Open)) {
+                    var counti = 0;
+                    var countj = 0;
+                    const int length = 1024;
                     var bytesi = new byte[length];
                     var bytesj = new byte[length];
-                    counti = fsi.Read(bytesi, 0, length);
-                    countj = fsj.Read(bytesj, 0, length);
-                    if (counti != countj) {
-                        result = false;
-                    }
-                    else {
-                        for (int k = 0; k < counti; k++) {
-                            if (bytesi[k] != bytesj[k]) {
-                                result = false;
-                                break;
+                    do {
+                        counti = fsi.Read(bytesi, 0, length);
+                        countj = fsj.Read(bytesj, 0, length);
+                        if (counti != countj) {
+                            same = false;
+                        }
+                        else {
+                            for (int k = 0; k < counti; k++) {
+                                if (bytesi[k] != bytesj[k]) {
+                                    same = false;
+                                    break;
+                                }
                             }
                         }
-                    }
-                } while (result && counti > 0 && countj > 0);
+                    } while (same && counti > 0 && countj > 0);
+                }
             }
-            return result;
+            return same;
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e) {
